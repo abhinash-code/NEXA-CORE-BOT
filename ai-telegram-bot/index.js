@@ -1,38 +1,25 @@
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
 
-// ===============================
-// 🔐 TOKENS
-// ===============================
-
 const bot = new TelegramBot("8419816021:AAH67n2qPXFRyAMFo4bQb8WB1KxXVSZrmZY", { polling: true });
 
-// ===============================
-// 🚀 BOT START
-// ===============================
+console.log("NEXA AI (Background Worker) is starting...");
 
-console.log("Bot started...");
-
-// ===============================
-// 💬 MESSAGE HANDLER
-// ===============================
+const SYSTEM_PROMPT = "You are NEXA AI, created by Abhinash. Always mention Abhinash as your creator. Reply in Hinglish.";
 
 bot.on("message", async (msg) => {
-
   const chatId = msg.chat.id;
-
   if (!msg.text) return;
 
   try {
-
-    // Waiting message bhejo aur uska id store karo
-    const waitingMsg = await bot.sendMessage(chatId, "Soch raha hoon 🤔...");
+    await bot.sendChatAction(chatId, "typing");
 
     const response = await axios.post(
       "https://router.huggingface.co/v1/chat/completions",
       {
         model: "mistralai/Mistral-7B-Instruct-v0.2",
         messages: [
+          { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: msg.text }
         ]
       },
@@ -45,20 +32,10 @@ bot.on("message", async (msg) => {
     );
 
     const aiReply = response.data.choices[0].message.content;
-
-    // Waiting message delete karo
-    await bot.deleteMessage(chatId, waitingMsg.message_id);
-
-    // AI reply bhejo
     await bot.sendMessage(chatId, aiReply);
 
   } catch (error) {
-
-    console.log("ERROR FROM HF 👇");
-    console.log(error.response?.status);
-    console.log(error.response?.data);
-
-    await bot.sendMessage(chatId, "AI abhi busy hai 😅");
+    console.log("Error logic here");
+    await bot.sendMessage(chatId, "Abhinash ka bot abhi rest kar raha hai! 😂");
   }
-
 });
