@@ -1,17 +1,36 @@
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
+const http = require("http");
 
+// ===============================
+// 🌐 FREE RENDER FIX (Dummy Port)
+// ===============================
+// Yeh Render ko "Live" rakhega bina paise diye
+http.createServer((req, res) => {
+  res.write("NEXA AI is online and free!");
+  res.end();
+}).listen(process.env.PORT || 3000);
+
+// ===============================
+// 🚀 TOKENS
+// ===============================
 const bot = new TelegramBot("8419816021:AAH67n2qPXFRyAMFo4bQb8WB1KxXVSZrmZY", { polling: true });
 
-console.log("NEXA AI (Background Worker) is starting...");
+console.log("NEXA AI is waking up for free...");
 
-const SYSTEM_PROMPT = "You are NEXA AI, created by Abhinash. Always mention Abhinash as your creator. Reply in Hinglish.";
+// ===============================
+// 🧠 IDENTITY & LOGIC
+// ===============================
+const SYSTEM_PROMPT = "Your name is NEXA AI. You were created by Abhinash. " +
+                     "Always identify as NEXA AI and credit Abhinash as your developer. " +
+                     "Talk in a friendly Hinglish style.";
 
 bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
   if (!msg.text) return;
 
   try {
+    // Typing animation (Noob wala text nahi dikhega)
     await bot.sendChatAction(chatId, "typing");
 
     const response = await axios.post(
@@ -35,7 +54,7 @@ bot.on("message", async (msg) => {
     await bot.sendMessage(chatId, aiReply);
 
   } catch (error) {
-    console.log("Error logic here");
-    await bot.sendMessage(chatId, "Abhinash ka bot abhi rest kar raha hai! 😂");
+    console.log("Error logic");
+    await bot.sendMessage(chatId, "Bhai, server down hai shayad! 😂");
   }
 });
