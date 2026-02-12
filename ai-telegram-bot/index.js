@@ -44,7 +44,7 @@ bot.on("message", async (msg) => {
       },
       {
         headers: {
-          "Authorization": "Bearer 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",
+          "Authorization": "Bearer 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",
           "Content-Type": "application/json"
         }
       }
@@ -58,5 +58,6 @@ bot.on("message", async (msg) => {
     await bot.sendMessage(chatId, "Bhai, server down hai shayad! 😂");
   }
 });
+
 
 
